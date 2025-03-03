@@ -1,11 +1,15 @@
+import logging
 import os
-from selenium import webdriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
 import time
 
-DOWNLOAD_DIR = "/Users/vladislavstaritsyn/HSE_SMADIMO_GP2/scrapping_json_data"
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.ui import WebDriverWait
+
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+
+DOWNLOAD_DIR = "/home/timur/Downloads/HSE_SMADIMO_GP2/scrapping_json_data"
 
 os.makedirs(DOWNLOAD_DIR, exist_ok=True)
 
@@ -19,7 +23,7 @@ options.add_experimental_option("prefs", {
 
 driver = webdriver.Chrome(options=options)
 
-print(f"Загруженные файлы будут сохраняться в: {DOWNLOAD_DIR}")
+logging.info(f"Загруженные файлы будут сохраняться в: {DOWNLOAD_DIR}")
 
 
 def close_cookie_banner():
@@ -60,17 +64,20 @@ def get_data_from_chart(url, json_name):
     driver.get(url)
     close_cookie_banner()
 
+    time.sleep(5)
     # Нажимаем на кнопку "3г"
     period_xpath = "//*[contains(text(), '3г') or contains(text(), '3 г') or contains(text(), '3 года')]"
     click_element(period_xpath, timeout=30, scroll=False)
 
+    time.sleep(5)
     # Нажимаем на кнопку "Скачать JSON"
     download_json_xpath = "//*[contains(text(), 'Скачать JSON')]"
     click_element(download_json_xpath, timeout=30, scroll=False)
 
+    time.sleep(5)
     # Ждём, пока JSON-файл появится в папке загрузки
     json_path = os.path.join(DOWNLOAD_DIR, f"{json_name}.json")
-    print(f"JSON загружен и сохранён в '{json_path}'")
+    logging.info(f"JSON загружен и сохранён в '{json_path}'")
 
 
 try:

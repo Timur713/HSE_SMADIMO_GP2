@@ -46,7 +46,7 @@ def append_data_for_period(symbol, total_hours=24 * 365 * 2):
         all_data = pd.concat([df, all_data], ignore_index=True)
         to_ts = int(df['datetime'].iloc[0].timestamp()) - 1
         hours_retrieved += len(df)
-        print(f"Retrieved {hours_retrieved} hours of data for {symbol}.")
+        logging.info(f"Retrieved {hours_retrieved} hours of data for {symbol}.")
     logging.info("Successfully searched all data for our period")
     return all_data
 
@@ -94,44 +94,50 @@ def fetch_global_market_cap():
     logging.info("Successfully fetched global market cap data.")
     return market_data['data']['total_market_cap']['usd']
 
+def print_base_info():
+    try:
+        # Get data for top cryptocurrencies by market cap and volume
+        top_cryptos_by_market_cap = fetch_top_cryptos_by_market_cap()
+        top_cryptos_by_volume = fetch_top_cryptos_by_volume()
+        entire_market_cap = fetch_global_market_cap()
 
-try:
-    # Get hourly data for BTC and ETH
-    hourly_data_btc = append_data_for_period("BTC")[['datetime', 'open', 'high', 'low', 'close', 'volume']].copy()
-    hourly_data_eth = append_data_for_period("ETH")[['datetime', 'open', 'high', 'low', 'close', 'volume']].copy()
-    hourly_data_btc['name'] = 'BTC'
-    hourly_data_eth['name'] = 'ETH'
-    combined_hourly_data = pd.concat([hourly_data_btc, hourly_data_eth], ignore_index=True)
+        print("Top cryptocurrencies by market capitalization:")
+        for crypto in top_cryptos_by_market_cap:
+            formatted_market_cap = f"{crypto['market_cap']:,}".replace(",", ".")
+            print(f"{crypto['name']} (Symbol: {crypto['symbol']}) - Market Cap: ${formatted_market_cap}")
 
-    # Get data for top cryptocurrencies by market cap and volume
-    top_cryptos_by_market_cap = fetch_top_cryptos_by_market_cap()
-    top_cryptos_by_volume = fetch_top_cryptos_by_volume()
-    entire_market_cap = fetch_global_market_cap()
+        print("\nTop cryptocurrencies by trading volume in the past 24 hours:")
+        for crypto in top_cryptos_by_volume:
+            formatted_volume = f"{crypto['total_volume']:,}".replace(",", ".")
+            print(f"{crypto['name']} (Symbol: {crypto['symbol']}) - Volume: ${formatted_volume}")
 
-    print("Hourly crypto data")
-    for index, row in combined_hourly_data.iterrows():
-        name = row['name']
-        date = row['datetime'].strftime('%Y-%m-%d')
-        open_price = row['open']
-        high_price = row['high']
-        low_price = row['low']
-        close_price = row['close']
-        volume = row['volume']
-        print(f"Валюта: {name}, Дата: {date}, Цена открытия: {open_price}, Максимальная цена: {high_price}, "
-              f"Минимальная цена: {low_price}, Цена закрытия: {close_price}, Объем: {volume}")
+        formatted_total_market_cap = f"{entire_market_cap:,}".replace(",", ".")
+        print(f"\nTotal cryptocurrency market cap worldwide: ${formatted_total_market_cap}\n")
+    except Exception as error:
+        logging.error("An error occurred while fetching cryptocurrency data.", exc_info=True)
 
-    print("Top cryptocurrencies by market capitalization:")
-    for crypto in top_cryptos_by_market_cap:
-        formatted_market_cap = f"{crypto['market_cap']:,}".replace(",", ".")
-        print(f"{crypto['name']} (Symbol: {crypto['symbol']}) - Market Cap: ${formatted_market_cap}")
+def get_prices():
+    try:
+        # Get hourly data for BTC and ETH
+        hourly_data_btc = append_data_for_period("BTC")[['datetime', 'open', 'high', 'low', 'close', 'volume']].copy()
+        hourly_data_eth = append_data_for_period("ETH")[['datetime', 'open', 'high', 'low', 'close', 'volume']].copy()
+        hourly_data_btc['name'] = 'BTC'
+        hourly_data_eth['name'] = 'ETH'
+        combined_hourly_data = pd.concat([hourly_data_btc, hourly_data_eth], ignore_index=True)
 
-    print("\nTop cryptocurrencies by trading volume in the past 24 hours:")
-    for crypto in top_cryptos_by_volume:
-        formatted_volume = f"{crypto['total_volume']:,}".replace(",", ".")
-        print(f"{crypto['name']} (Symbol: {crypto['symbol']}) - Volume: ${formatted_volume}")
+        # for debug
+        # print("Hourly crypto data")
+        # for index, row in combined_hourly_data.iterrows():
+        #     name = row['name']
+        #     date = row['datetime'].strftime('%Y-%m-%d')
+        #     open_price = row['open']
+        #     high_price = row['high']
+        #     low_price = row['low']
+        #     close_price = row['close']
+        #     volume = row['volume']
+        #     print(f"Валюта: {name}, Дата: {date}, Цена открытия: {open_price}, Максимальная цена: {high_price}, "
+        #           f"Минимальная цена: {low_price}, Цена закрытия: {close_price}, Объем: {volume}")
 
-    formatted_total_market_cap = f"{entire_market_cap:,}".replace(",", ".")
-    print(f"\nTotal cryptocurrency market cap worldwide: ${formatted_total_market_cap}")
-
-except Exception as error:
-    logging.error("An error occurred while fetching cryptocurrency data.", exc_info=True)
+        return combined_hourly_data
+    except Exception as error:
+        logging.error("An error occurred while fetching cryptocurrency data.", exc_info=True)
