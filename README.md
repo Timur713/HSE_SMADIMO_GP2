@@ -18,4 +18,4 @@ Group project 2 by Timur Isanbirdin, Andrey Anokhin, Vladislav Staritsyn and Ign
 1. First of all, you should run script `web_scrapping.py` to download jsons with advance information about Bitcoin
 
 ## EDA
-All EDA process is in `EDA.py` file
+Combine data into datasets and save them as .csv for future analysis.
