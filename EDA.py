@@ -83,3 +83,7 @@ except Exception as error:
 
 print(base_data.head())
 print(advance_data.head())
+
+# save to csv for future analytics
+base_data.to_csv('base_data.csv', index=True, index_label='Date', sep=',')
+advance_data.to_csv('advance_data.csv', index=True, index_label='Date', sep=',')
