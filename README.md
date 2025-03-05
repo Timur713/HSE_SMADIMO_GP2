@@ -1,21 +1,21 @@
 # HSE_SMADIMO_GP2
 
-Group project 2 by Timur Isanbirdin, Andrey Anokhin, Vladislav Staritsyn and Ignat Gurtovoj
+Групповой проект 2 Тимура Исанбирдина, Андрея Анохина, Владислава Старицына и Игната Гуртового
 
-## Getting started
-1. Get `API_KEY` from `https://developers.coindesk.com/`
-2. Create `api_keys.py` file and save this `API_KEY`
+## Начало работы
+1. Получите `API_KEY` с `https://developers.coindesk.com/`
+2. Создайте файл `api_keys.py` и сохраните его в переменную `API_KEY`
 
-# Description
-## Get base info by API
-`API.py` contains two usefull functions:
-- `print_base_info()` # base information about crypto market and top currencies
-- `get_prices()` # history prices of BTC and ETH
-#### We will use this functions in `EDA.py` file
+# Описание
+## Получение базовой информации по API
+`API.py` содержит две полезные функции:
+- `print_base_info()` # базовая информация о рынке криптовалют и основных валютах
+- `get_prices()` # исторические цены BTC и ETH
+#### Мы будем использовать эти функции в файле `EDA.py`
 
-## Get advance info by web-scrapping (for BTC only)
-0. This project already has downloaded files, but you can overwrite them doing next steps
-1. First of all, you should run script `web_scrapping.py` to download jsons with advance information about Bitcoin
+## Получение дополнительной информации с помощью веб-скрапинга (только для BTC)
+0. В этом проекте уже есть загруженные файлы, но вы можете перезаписать их, выполнив следующий шаг
+1. Запустить скрипт `web_scrapping.py`, чтобы загрузить jsons с дополнительной информацией о Bitcoin
 
 ## EDA
-Combine data into datasets and save them as .csv for future analysis.
+Формирование датасетов для дальнейшего EDA происходит в файле `EDA.py`. Дальнейший анализ идет в google colab (.ipynb файл)
